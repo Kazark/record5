@@ -2,6 +2,10 @@
 {-# LANGUAGE LambdaCase #-} -- A pleasant, plain extension
 module Main where
 
+-- I prefer fully explicit imports. I believe it makes your code more readable
+-- by informing people as to where each value or type is coming from. If someone
+-- is reading your code in an editor that supports "go to definition," this is
+-- not strictly necessary; but I like to not assume that they are.
 import Control.UserFacingError (fail)
 import Data.Record5 (parseDelim, Delimiter)
 import Prelude hiding (fail)
@@ -16,6 +20,12 @@ unrecognizedExt :: String -> String
 unrecognizedExt ext =
   -- The (x :: Delimiter) below is why we have ScopedTypeVariables turned on
   let supported = unwords [show x | (x :: Delimiter) <- [minBound..maxBound]] in
+  -- Because we've dynamically calculated the supported formats, our error
+  -- message will never be out of sync with our code---the compiler will ensure
+  -- it! One of the important things when designing code is to consider the
+  -- forces of change over time. You don't know what will change in the future,
+  -- and you don't want to clutter your code with guesses about the future, but
+  -- you should be aware that things will change unless your codebase dies!
   "Unrecognized file extension: " ++ ext ++ " (supported: " ++ supported ++ ")."
 
 determineFormat :: FilePath -> IO Delimiter
