@@ -37,7 +37,9 @@ packages:
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
-# extra-deps: []
+extra-deps:
+- invertible-syntax-0.2.1@sha256:5209f33342b467284eba0a491a565151b678bf2e3e2ef206cbd342352c88f4df
+- derive-2.6.5@sha256:41480f98be28ca5a942f137f1ce17c2fc5e67040c434e8d3f4c45459b8bc6cbb
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
@@ -62,3 +64,8 @@ packages:
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+
+ghc-options:
+    "$locals": -Wall -Wno-unticked-promoted-constructors
+    "$targets": -Werror
+    "$everything": -O2
