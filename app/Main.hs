@@ -8,6 +8,7 @@ module Main where
 -- not strictly necessary; but I like to not assume that they are.
 import Control.UserFacingError (fail)
 import Data.Record5 (parseDelim, Delimiter)
+import Data.Record5.Syntax (printRecord5, parseRecord5)
 import Prelude hiding (fail)
 import System.Environment (getArgs)
 import System.FilePath (takeExtension)
@@ -51,5 +52,8 @@ main = do
   -- If we expected that the input file might be huge, we might want to stream
   -- it in. But this is just an exercise. :)
   text <- readFile inputFile
+  -- In CSV files, newlines are significant. Assuming that's what we want here.
   delimiter <- determineFormat inputFile
-  putStrLn "I don't actually work yet. Come back later. ;)"
+  records <- traverse (parseRecord5 delimiter) $ lines text
+  printed <- traverse (printRecord5 delimiter) records
+  putStrLn $ unlines $ printed
