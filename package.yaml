@@ -13,7 +13,9 @@ description:         Just a little exercise.
 
 dependencies:
 - base >= 4.7 && < 5
+- colour
 - filepath
+- time
 
 library:
   source-dirs: src
