@@ -2,7 +2,13 @@
 module Data.Record5 where
 
 import Data.Colour (Colour)
+import Data.Delimited.Field (Field)
 import Data.Time (Day)
+
+-- | What kind of characters are valid in a name? Oh my, who knows! Unicode is
+-- | such a huge character set, and names are so different. Gonna leave this one
+-- | wide open.
+newtype Name = Name Field
 
 data Gender
   = Male | Female

@@ -4,7 +4,7 @@ import qualified Data.Delimited.Delimiter as Delim
 
 -- | An opaque newtype, conceptually a subtype of string, that blocks the use of
 -- | delimiter characters.
-newtype Field = Field String
+newtype Field = Field String deriving Eq
 
 instance Show Field where
   show (Field f) = f

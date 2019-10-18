@@ -1,4 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
 module Data.Delimited.Delimiter where
 
 import Control.UserFacingError (fail)
@@ -13,6 +12,9 @@ delimChar :: Delimiter -> Char
 delimChar Comma = ','
 delimChar Pipe = '|'
 delimChar Space = ' '
+
+instance Show Delimiter where
+  show d = [delimChar d]
 
 delimiters :: [Delimiter]
 delimiters = [minBound..maxBound]
@@ -32,12 +34,12 @@ delimFromExt s = lookup s tab where
   -- to ensure that the parser and printer stay in sync. If this were a large
   -- datatype or frequently used, we might want to ensure this table was only
   -- calculated once. But it's neither large nor frequently used.
-  tab = [(extension x, x) | x <- [minBound..maxBound]]
+  tab = [(extension x, x) | x <- delimiters]
 
 unrecognizedExt :: String -> String
 unrecognizedExt ext =
   -- The (x :: Delimiter) below is why we have ScopedTypeVariables turned on
-  let supported = unwords [extension x | (x :: Delimiter) <- [minBound..maxBound]] in
+  let supported = unwords [extension x | x <- delimiters] in
   -- Because we've dynamically calculated the supported formats, our error
   -- message will never be out of sync with our code---the compiler will ensure
   -- it! One of the important things when designing code is to consider the

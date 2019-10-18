@@ -37,7 +37,9 @@ packages:
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
-# extra-deps: []
+extra-deps:
+- derive-2.6.5@sha256:41480f98be28ca5a942f137f1ce17c2fc5e67040c434e8d3f4c45459b8bc6cbb
+- haskell-src-exts-1.20.3@sha256:83ae523bbec907a42c043de1f5bbf4c1554e7c3b898af07bb1ce6e80eaa282ec
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
