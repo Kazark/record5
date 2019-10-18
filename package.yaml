@@ -12,11 +12,10 @@ extra-source-files:
 description:         Just a little exercise.
 
 dependencies:
+- MissingH
 - base >= 4.7 && < 5
 - colour
 - filepath
-- invertible-syntax
-- partial-isomorphisms
 - time
 
 library:
@@ -43,3 +42,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - record5
+    - tasty
+    - tasty-hunit
+    - tasty-quickcheck
