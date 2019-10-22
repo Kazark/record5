@@ -1,8 +1,9 @@
-module Data.Record5.Syntax (printRecord5, parseRecord5) where
+module Data.Record5.Syntax (printRecords, parseRecords) where
 
 import Data.Function ((&))
+import Data.Delimited.Delimiter (Delimiter)
 import Data.Delimited.Field (avowField)
-import Data.Delimited (Delimited(..))
+import Data.Delimited (Delimited(..), parseDelimited, printDelimited)
 import Data.Record5
 import Data.Time (parseTimeM, formatTime, defaultTimeLocale)
 
@@ -41,3 +42,11 @@ printRecord5 record =
   -- is safe.
   , avowField $ formatTime defaultTimeLocale dateFormat $ dateOfBirth record
   ] & Delimited
+
+parseRecords :: Delimiter -> String -> IO [Record5]
+parseRecords delimiter text = do
+  delimited <- parseDelimited delimiter text
+  traverse parseRecord5 delimited
+
+printRecords :: Delimiter -> [Record5] -> String
+printRecords delimiter = printDelimited delimiter . fmap printRecord5

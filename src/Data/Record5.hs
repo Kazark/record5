@@ -1,17 +1,21 @@
-{-# LANGUAGE TemplateHaskell #-}
-module Data.Record5 where
+module Data.Record5
+  ( Gender(..), Record5(..)
+  , byGenderDescThenLastNameAsc, byDOBAsc, byLastNameDesc
+  ) where
 
 import Data.Delimited.Field (Field)
+import Data.List (sortOn)
 import Data.Time (Day)
-
--- | What kind of characters are valid in a name? Oh my, who knows! Unicode is
--- | such a huge character set, and names are so different. Gonna leave this one
--- | wide open.
-newtype Name = Name Field
 
 data Gender
   = Male | Female
-  deriving (Eq, Bounded, Ord, Enum)
+  deriving Eq
+
+-- | Females before males
+instance Ord Gender where
+  compare Female Male = LT
+  compare Male Female = GT
+  compare _ _ = EQ
 
 -- | Name and color fields have been left open-ended, because what is the proper
 -- | way to constrain them? I did look into the `colour` library, and it was
@@ -26,3 +30,22 @@ data Record5
             , gender :: Gender
             , favoriteColor :: Field
             , dateOfBirth :: Day }
+
+newtype InvOrd a = InvOrd a deriving Eq
+
+invertOrdering :: Ordering -> Ordering
+invertOrdering LT = GT
+invertOrdering EQ = EQ
+invertOrdering GT = LT
+
+instance Ord a => Ord (InvOrd a) where
+  compare (InvOrd a) (InvOrd b) = invertOrdering $ compare a b
+
+byGenderDescThenLastNameAsc :: [Record5] -> [Record5]
+byGenderDescThenLastNameAsc = sortOn (\r -> (gender r, InvOrd $ lastName r))
+
+byDOBAsc :: [Record5] -> [Record5]
+byDOBAsc = sortOn (InvOrd . dateOfBirth)
+
+byLastNameDesc :: [Record5] -> [Record5]
+byLastNameDesc = sortOn lastName
