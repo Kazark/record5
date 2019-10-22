@@ -4,10 +4,12 @@
 -- | But it is simple.
 module Data.Delimited (Delimited(..), parseDelimited, printDelimited) where
 
+import Control.UserFacingError (fail)
+import Data.Delimited.Delimiter (Delimiter, delimChar, delimName)
 import Data.Delimited.Field (Field, parseField)
-import Data.Delimited.Delimiter (Delimiter, delimChar)
-import Data.List.Utils (split)
 import Data.List (intersperse)
+import Data.List.Utils (split)
+import Prelude hiding (fail)
 
 newtype Delimited = Delimited [Field]
 
@@ -21,9 +23,15 @@ printDelimitedLine :: Delimiter -> Delimited -> String
 printDelimitedLine delim (Delimited fields) =
   concat $ intersperse [delimChar delim] $ fmap show fields
 
-parseDelimited :: Delimiter -> String -> Maybe [Delimited]
+tryParseDelimited :: Delimiter -> String -> Maybe [Delimited]
+tryParseDelimited delim =
+  traverse (parseDelimitedLine delim) . filter (/= "") . lines
+
+parseDelimited :: Delimiter -> String -> IO [Delimited]
 parseDelimited delim text =
-  traverse (parseDelimitedLine delim) $ lines text
+  case tryParseDelimited delim text of
+    Nothing -> fail $ "Failed to parse " ++ delimName delim ++ "-delimited data"
+    Just x -> return x
 
 printDelimited :: Delimiter -> [Delimited] -> String
 printDelimited delim records =

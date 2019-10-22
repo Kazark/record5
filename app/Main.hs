@@ -34,9 +34,7 @@ main = do
   text <- readFile inputFile
   -- In CSV files, newlines are significant. Assuming that's what we want here.
   delimiter <- determineFormat inputFile
-  delimited <- case parseDelimited delimiter text of
-                 Nothing -> fail "Failed to parse delimited format"
-                 Just x -> return x
+  delimited <- parseDelimited delimiter text
   records <- traverse parseRecord5 delimited
   let printed = printDelimited delimiter $ map printRecord5 records
   putStrLn printed

@@ -13,6 +13,11 @@ delimChar Comma = ','
 delimChar Pipe = '|'
 delimChar Space = ' '
 
+delimName :: Delimiter -> String
+delimName Comma = "comma"
+delimName Pipe = "pipe"
+delimName Space = "space"
+
 instance Show Delimiter where
   show d = [delimChar d]
 

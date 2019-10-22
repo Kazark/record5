@@ -1,29 +1,32 @@
 module Data.Record5.Syntax (printRecord5, parseRecord5) where
 
 import Data.Function ((&))
---import Data.Colour.Names (readColourName)
 import Data.Delimited.Field (avowField)
 import Data.Delimited (Delimited(..))
 import Data.Record5
-import Data.Time ({-parseTimeM, -}formatTime, defaultTimeLocale)
+import Data.Time (parseTimeM, formatTime, defaultTimeLocale)
 
 printGender :: Gender -> String
 printGender Male = "M"
 printGender Female = "F"
 
-_parseGender :: String -> Maybe Gender
-_parseGender "M" = Just Male
-_parseGender "F" = Just Female
-_parseGender _ = Nothing
+parseGender :: String -> Maybe Gender
+parseGender "M" = Just Male
+parseGender "F" = Just Female
+parseGender _ = Nothing
 
 dateFormat :: String
 dateFormat = "%m/%d/%Y"
 
--- readColourName fColor
--- parseTimeM False defaultTimeLocale dateFormat dateOB
-
 parseRecord5 :: Delimited -> IO Record5
-parseRecord5 _text = undefined -- TODO
+parseRecord5 (Delimited [lastN, firstN, rawGender, fColor, rawDOB]) = do
+  gender' <- case parseGender $ show rawGender of
+               Nothing -> fail $ "Unrecognized gender: " ++ show rawGender
+               Just g -> return g
+  dob <- parseTimeM False defaultTimeLocale dateFormat $ show rawDOB
+  return $ Record5 lastN firstN gender' fColor dob
+parseRecord5 (Delimited fields) =
+  fail $ "Expected 5 fields, got " ++ show (length fields)
 
 printRecord5 :: Record5 -> Delimited
 printRecord5 record =
