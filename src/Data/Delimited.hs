@@ -5,7 +5,7 @@
 module Data.Delimited (Delimited(..), parseDelimited, printDelimited) where
 
 import Control.UserFacingError (fail)
-import Data.Delimited.Delimiter (Delimiter, delimChar, delimName)
+import Data.Delimited.Delimiter (Delimiter, delimStr, delimName)
 import Data.Delimited.Field (Field, parseField)
 import Data.List (intersperse)
 import Data.List.Utils (split)
@@ -15,13 +15,13 @@ newtype Delimited = Delimited [Field]
 
 parseDelimitedLine :: Delimiter -> String -> Maybe Delimited
 parseDelimitedLine delim text = do
-  let rawFields = split [delimChar delim] text
+  let rawFields = split (delimStr delim) text
   fields <- traverse parseField rawFields
   return $ Delimited fields
 
 printDelimitedLine :: Delimiter -> Delimited -> String
 printDelimitedLine delim (Delimited fields) =
-  concat $ intersperse [delimChar delim] $ fmap show fields
+  concat $ intersperse (delimStr delim) $ fmap show fields
 
 tryParseDelimited :: Delimiter -> String -> Maybe [Delimited]
 tryParseDelimited delim =

@@ -8,10 +8,10 @@ data Delimiter
   = Comma | Pipe | Space
   deriving (Eq, Bounded, Ord, Enum)
 
-delimChar :: Delimiter -> Char
-delimChar Comma = ','
-delimChar Pipe = '|'
-delimChar Space = ' '
+delimStr :: Delimiter -> String
+delimStr Comma = ", "
+delimStr Pipe = " | "
+delimStr Space = " "
 
 delimName :: Delimiter -> String
 delimName Comma = "comma"
@@ -19,7 +19,7 @@ delimName Pipe = "pipe"
 delimName Space = "space"
 
 instance Show Delimiter where
-  show d = [delimChar d]
+  show = delimStr
 
 delimiters :: [Delimiter]
 delimiters = [minBound..maxBound]

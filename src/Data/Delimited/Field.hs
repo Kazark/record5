@@ -1,7 +1,8 @@
 module Data.Delimited.Field (Field, parseField, avowField) where
 
-import Data.Maybe (fromJust)
 import qualified Data.Delimited.Delimiter as Delim
+import           Data.List (nub)
+import           Data.Maybe (fromJust)
 
 -- | An opaque newtype, conceptually a subtype of string, that blocks the use of
 -- | delimiter characters.
@@ -10,8 +11,9 @@ newtype Field = Field String deriving Eq
 instance Show Field where
   show (Field f) = f
 
+-- | A list of all characters used in delimiter strings
 delimiters :: [Char]
-delimiters = fmap Delim.delimChar Delim.delimiters
+delimiters = nub $ Delim.delimiters >>= Delim.delimStr
 
 -- | We'll make this simple and say:
 -- | 1. No matter which delimiter you are using, we expect exactly one to
