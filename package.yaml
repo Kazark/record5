@@ -14,7 +14,6 @@ description:         Just a little exercise.
 dependencies:
 - MissingH
 - base >= 4.7 && < 5
-- colour
 - filepath
 - time
 

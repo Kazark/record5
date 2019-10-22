@@ -7,6 +7,7 @@ module Main where
 -- not strictly necessary; but I like to not assume that they are.
 import Control.UserFacingError (fail)
 import Data.Delimited.Delimiter (determineFormat)
+import Data.Delimited (printDelimited, parseDelimited)
 import Data.Record5.Syntax (printRecord5, parseRecord5)
 import Prelude hiding (fail)
 import System.Environment (getArgs)
@@ -33,6 +34,9 @@ main = do
   text <- readFile inputFile
   -- In CSV files, newlines are significant. Assuming that's what we want here.
   delimiter <- determineFormat inputFile
-  records <- traverse (parseRecord5 delimiter) $ lines text
-  printed <- traverse (printRecord5 delimiter) records
-  putStrLn $ unlines $ printed
+  delimited <- case parseDelimited delimiter text of
+                 Nothing -> fail "Failed to parse delimited format"
+                 Just x -> return x
+  records <- traverse parseRecord5 delimited
+  let printed = printDelimited delimiter $ map printRecord5 records
+  putStrLn printed

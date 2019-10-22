@@ -9,7 +9,7 @@ import Data.Delimited.Delimiter (Delimiter, delimChar)
 import Data.List.Utils (split)
 import Data.List (intersperse)
 
-data Delimited = Delimited [Field]
+newtype Delimited = Delimited [Field]
 
 parseDelimitedLine :: Delimiter -> String -> Maybe Delimited
 parseDelimitedLine delim text = do

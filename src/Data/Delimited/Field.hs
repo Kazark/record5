@@ -1,5 +1,6 @@
-module Data.Delimited.Field (Field, parseField) where
+module Data.Delimited.Field (Field, parseField, avowField) where
 
+import Data.Maybe (fromJust)
 import qualified Data.Delimited.Delimiter as Delim
 
 -- | An opaque newtype, conceptually a subtype of string, that blocks the use of
@@ -24,3 +25,11 @@ parseField field =
   if all (\c -> not $ elem c delimiters) field
   then Just $ Field field
   else Nothing
+
+-- | Only use this function where you have proof that the string will never be
+-- | an invalid field. This is an unsafe function, in that it will crash on bad
+-- | input; there are exotic ways to let the typechecker in on what we're trying
+-- | to do here, but I'm going to rely on property-based tests to prove safety
+-- | instead.
+avowField :: String -> Field
+avowField = fromJust . parseField

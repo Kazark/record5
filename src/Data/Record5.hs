@@ -1,7 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Data.Record5 where
 
-import Data.Colour (Colour)
 import Data.Delimited.Field (Field)
 import Data.Time (Day)
 
@@ -14,20 +13,16 @@ data Gender
   = Male | Female
   deriving (Eq, Bounded, Ord, Enum)
 
--- | An impressively rich color type
--- | `Double` is an implementation detail here; we just want to think in terms
--- | of a color. Conveniently, we can add an alias since apparently the library
--- | is British. :P
-type Color = Colour Double
-
+-- | Name and color fields have been left open-ended, because what is the proper
+-- | way to constrain them? I did look into the `colour` library, and it was
+-- | cool, but did not have symmetric parsing and printing of color names. :(
+-- | When you understand your domain clearly, it is good to express it to the
+-- | compiler clearly; when you do not, it is best to constrain it as little as
+-- | you can, until you understand it better. Here, the only constraints we
+-- | place on the name and color fields, is that they not contain delimiters.
 data Record5
-            -- Technically, String is too big of a type for a name, if we wanted
-            -- to be precise. Considering the fact that no language I know of
-            -- makes modeling precise subtypes of strings straightforward
-            -- (though perhaps refinement types would be good for this?) I'm not
-            -- going to overthink it here.
-  = Record5 { lastName :: String
-            , firstName :: String
+  = Record5 { lastName :: Field
+            , firstName :: Field
             , gender :: Gender
-            , favoriteColor :: Color
+            , favoriteColor :: Field
             , dateOfBirth :: Day }
